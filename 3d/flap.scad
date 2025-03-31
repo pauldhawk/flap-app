@@ -277,39 +277,12 @@ module flap_with_letters(flap_color, letter_color, flap_index, flap_gap, flap = 
 }
 
 flap_gap = get_flap_gap();
-cut_tabs = false;
-square([ flap_width, flap_height - flap_corner_radius ]);
-translate([ flap_corner_radius, flap_height - flap_corner_radius ]) circle(r = flap_corner_radius, $fn = 40);
-translate([ flap_width - flap_corner_radius, flap_height - flap_corner_radius ])
-    circle(r = flap_corner_radius, $fn = 40);
-// flap_2d();
-// translate([ 0, -flap_pin_width / 2, 0 ]) difference()
-// {
-//     union()
-//     {
-//         square([ flap_width, flap_height - flap_corner_radius ]);
-
-//         // rounded corners
-//         hull()
-//         {
-//             translate([ flap_corner_radius, flap_height - flap_corner_radius ])
-//                 circle(r = flap_corner_radius, $fn = 40);
-//             translate([ flap_width - flap_corner_radius, flap_height - flap_corner_radius ])
-//                 circle(r = flap_corner_radius, $fn = 40);
-//         }
-//     }
-
-//     translate([ -eps, flap_pin_width ]) square([ eps + flap_notch_depth, flap_notch_height ]);
-//     translate([ flap_width - flap_notch_depth, flap_pin_width ]) square([ eps + flap_notch_depth, flap_notch_height
-//     ]);
-// }
-// flap_with_letters([ 1, 0, 0 ], [ 1, 1, 0 ], flap_index = flap_number, flap_gap = flap_gap, bleed = 0, print_3d =
-// true);
-// translate([ 0, -flap_pin_width - flap_gap, 0 ]) if (generate_second_half)
-// {
-//     rotate([ 180, 0, 0 ])
-//     {
-//         flap_with_letters([ 1, 0, 0 ], [ 1, 1, 0 ], flap_index = flap_number - 1, flap_gap = flap_gap, bleed = 0,
-//                           print_3d = true);
-//     }
-// }
+flap_with_letters([ 1, 0, 0 ], [ 1, 1, 0 ], flap_index = flap_number, flap_gap = flap_gap, bleed = 0, print_3d = true);
+translate([ 0, -flap_pin_width - flap_gap, 0 ]) if (generate_second_half)
+{
+    rotate([ 180, 0, 0 ])
+    {
+        flap_with_letters([ 1, 0, 0 ], [ 1, 1, 0 ], flap_index = flap_number - 1, flap_gap = flap_gap, bleed = 0,
+                          print_3d = true);
+    }
+}
