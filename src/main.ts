@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { getConfig } from "./config.ts";
 import { FlapConfig, PrintConfig } from "./schema.ts";
-
 // Get the global configs
 const { flapConfig, spoolConfig, printConfig } = getConfig();
 const color_grey = 0x888888;
@@ -60,17 +59,36 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
   shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false);
   shape.lineTo(0, 0);
 
-  // Notch shape (small rectangle)
-  const nw = printConfig.epsilon + flapConfig.notchDepth;
-  const nh = flapConfig.notchHeight;
-  const notchShape = new THREE.Shape();
-  notchShape.moveTo(0, 0);
-  notchShape.lineTo(nw, 0);
-  notchShape.lineTo(nw, nh);
-  notchShape.lineTo(0, nh);
-  notchShape.lineTo(0, 0);
+  // Notch shape Cutout /////////////////
+  // Left Notch
 
-  shape.holes.push(notchShape);
+  const notchShapeLeft = new THREE.Shape();
+  notchShapeLeft.moveTo(0, 0);
+  notchShapeLeft.lineTo(printConfig.epsilon + flapConfig.notchDepth, 0);
+  notchShapeLeft.lineTo(
+    printConfig.epsilon + flapConfig.notchDepth,
+    flapConfig.notchHeight
+  );
+  notchShapeLeft.lineTo(0, flapConfig.notchHeight);
+  notchShapeLeft.lineTo(0, 0);
+
+  // Notch shape Cutout: Right Notch
+  const notchShapeRight = new THREE.Path();
+  const notchWidth = printConfig.epsilon + flapConfig.notchDepth;
+  const notchHeight = flapConfig.notchHeight;
+  const xRight = w - notchWidth;
+
+  notchShapeRight.moveTo(xRight, 0);
+  notchShapeRight.lineTo(w, 0);
+  notchShapeRight.lineTo(w, notchHeight);
+  notchShapeRight.lineTo(xRight, notchHeight);
+  notchShapeRight.lineTo(xRight, 0);
+
+  // Add notches to shape as holes
+  shape.holes.push(notchShapeLeft);
+  shape.holes.push(notchShapeRight);
+
+  // Create geometry and mesh
   const shapeGeometry = new THREE.ShapeGeometry(shape);
   const material = new THREE.MeshBasicMaterial({
     color: 0x00ff00,
