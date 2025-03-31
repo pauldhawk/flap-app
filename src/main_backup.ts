@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { get_config } from "./constants.ts";
+import { get_config } from "./config.ts";
 import "./style.css";
 // Create the scene
 const scene: THREE.Scene = new THREE.Scene();
