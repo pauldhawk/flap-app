@@ -23,12 +23,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 export function createRoundedSquareShape(flapConfig: FlapConfig): any {
-  const shape = new THREE.Shape();
-
   const w = flapConfig.width;
   const h = flapConfig.height;
   const r = flapConfig.cornerRadius;
-
+  const shape = new THREE.Shape();
   shape.moveTo(0, 0); // bottom-left
   shape.lineTo(w, 0); // left side
   // notch out top left corner for radius
