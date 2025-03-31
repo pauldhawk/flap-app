@@ -89,7 +89,7 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
   return mesh;
 }
 
-// Example usage (if running in a browser scene setup):
+// Draw the flap shape:
 const shape = drawFlap(flapConfig, printConfig);
 
 scene.add(shape);
