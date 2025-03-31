@@ -26,22 +26,22 @@ export function createRoundedSquareShape(flapConfig: FlapConfig): any {
   const w = flapConfig.width;
   const h = flapConfig.height;
   const r = flapConfig.cornerRadius;
+
+  // Main Shape
   const shape = new THREE.Shape();
   shape.moveTo(0, 0); // bottom-left
-  shape.lineTo(w, 0); // left side
-  // notch out top left corner for radius
-  shape.lineTo(w, h - r);
-  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false);
+  shape.lineTo(w, 0); // bottom-left to bottom-right
+  shape.lineTo(w, h - r); // bottom-right to top-right corner
+  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false); // top-right corner
+  shape.lineTo(r, h); // top between corners
+  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false); // top-left corner
+  shape.lineTo(0, 0); // top-left to bottom-left
 
-  shape.lineTo(r, h); //  **
-  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false);
+  const shapeMesh = new THREE.Mesh(
+    new THREE.ShapeGeometry(shape),
+    new THREE.MeshBasicMaterial({ color: 0xff9900 })
+  );
 
-  // Close the shape
-  shape.lineTo(0, 0);
-
-  const shapeGeometry = new THREE.ShapeGeometry(shape);
-  const shapeMaterial = new THREE.MeshBasicMaterial({ color: 0xff9900 });
-  const shapeMesh = new THREE.Mesh(shapeGeometry, shapeMaterial);
   return shapeMesh;
 }
 
