@@ -25,38 +25,32 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const _drawNotchShape = (
-  flapConfig: FlapConfig,
-  printConfig: PrintConfig,
-  color = color_orange
-) => {
-  const w = printConfig.epsilon + flapConfig.notchDepth;
-  const h = flapConfig.notchHeight;
-  const shape = new THREE.Shape();
-  shape.moveTo(0, 0); // bottom-left
-  shape.lineTo(w, 0); // bottom-left to bottom-right
-  shape.lineTo(w, h); // bottom-right to top-right
-  shape.lineTo(0, h); // top-right to top-left
-  shape.lineTo(0, 0); // top-left to bottom-left
-
-  return new THREE.Mesh(
-    new THREE.ShapeGeometry(shape),
-    new THREE.MeshBasicMaterial({ color })
-  );
-};
 export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
-  const w = flapConfig.width;
-  const h = flapConfig.height;
-  const r = flapConfig.cornerRadius;
+  const { epsilon } = printConfig;
+  const { cornerRadius, height, notchDepth, notchHeight, width } = flapConfig;
 
   // Main flap shape with rounded top corners
   const shape = new THREE.Shape();
   shape.moveTo(0, 0);
-  shape.lineTo(w, 0);
-  shape.lineTo(w, h - r);
-  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false);
-  shape.lineTo(r, h);
-  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false);
+  shape.lineTo(width, 0);
+  shape.lineTo(width, height - cornerRadius);
+  shape.absarc(
+    width - cornerRadius,
+    height - cornerRadius,
+    cornerRadius,
+    0,
+    Math.PI / 2,
+    false
+  );
+  shape.lineTo(cornerRadius, height);
+  shape.absarc(
+    cornerRadius,
+    height - cornerRadius,
+    cornerRadius,
+    Math.PI / 2,
+    Math.PI,
+    false
+  );
   shape.lineTo(0, 0);
 
   // Notch shape Cutout /////////////////
@@ -64,23 +58,19 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
 
   const notchShapeLeft = new THREE.Shape();
   notchShapeLeft.moveTo(0, 0);
-  notchShapeLeft.lineTo(printConfig.epsilon + flapConfig.notchDepth, 0);
-  notchShapeLeft.lineTo(
-    printConfig.epsilon + flapConfig.notchDepth,
-    flapConfig.notchHeight
-  );
-  notchShapeLeft.lineTo(0, flapConfig.notchHeight);
+  notchShapeLeft.lineTo(epsilon + notchDepth, 0);
+  notchShapeLeft.lineTo(epsilon + notchDepth, notchHeight);
+  notchShapeLeft.lineTo(0, notchHeight);
   notchShapeLeft.lineTo(0, 0);
 
   // Notch shape Cutout: Right Notch
   const notchShapeRight = new THREE.Path();
-  const notchWidth = printConfig.epsilon + flapConfig.notchDepth;
-  const notchHeight = flapConfig.notchHeight;
-  const xRight = w - notchWidth;
+  const notchWidth = epsilon + notchDepth;
+  const xRight = width - notchWidth;
 
   notchShapeRight.moveTo(xRight, 0);
-  notchShapeRight.lineTo(w, 0);
-  notchShapeRight.lineTo(w, notchHeight);
+  notchShapeRight.lineTo(width, 0);
+  notchShapeRight.lineTo(width, notchHeight);
   notchShapeRight.lineTo(xRight, notchHeight);
   notchShapeRight.lineTo(xRight, 0);
 
