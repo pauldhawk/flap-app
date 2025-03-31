@@ -22,8 +22,13 @@ export type SpoolConfig = {
   pitchRadius: number;
 };
 
+export type PrintConfig = {
+  epsilon: number;
+};
+
 export type AppConfig = {
   // characters: Array;
   flapConfig: FlapConfig;
   spoolConfig: SpoolConfig;
+  printConfig: PrintConfig;
 };
