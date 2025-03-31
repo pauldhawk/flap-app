@@ -1,5 +1,4 @@
 import * as THREE from "three";
-import { CSG } from "three-csg-ts";
 import { getConfig } from "./config.ts";
 import { FlapConfig, PrintConfig } from "./schema.ts";
 
@@ -51,44 +50,35 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
   const h = flapConfig.height;
   const r = flapConfig.cornerRadius;
 
-  // Main Shape
+  // Main flap shape with rounded top corners
   const shape = new THREE.Shape();
-  shape.moveTo(0, 0); // bottom-left
-  shape.lineTo(w, 0); // bottom-left to bottom-right
-  shape.lineTo(w, h - r); // bottom-right to top-right corner
-  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false); // top-right corner
-  shape.lineTo(r, h); // top between corners
-  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false); // top-left corner
-  shape.lineTo(0, 0); // top-left to bottom-left
-  const extrudeSettings = { depth: 1, bevelEnabled: false };
-  const shapeMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(shape, extrudeSettings),
-    new THREE.MeshNormalMaterial()
-  );
-  shapeMesh.position.z = 0;
+  shape.moveTo(0, 0);
+  shape.lineTo(w, 0);
+  shape.lineTo(w, h - r);
+  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false);
+  shape.lineTo(r, h);
+  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false);
+  shape.lineTo(0, 0);
 
+  // Notch shape (small rectangle)
   const nw = printConfig.epsilon + flapConfig.notchDepth;
   const nh = flapConfig.notchHeight;
   const notchShape = new THREE.Shape();
-  notchShape.moveTo(0, 0); // bottom-left
-  notchShape.lineTo(nw, 0); // bottom-left to bottom-right
-  notchShape.lineTo(nw, nh); // bottom-right to top-right
-  notchShape.lineTo(0, nh); // top-right to top-left
-  notchShape.lineTo(0, 0); // top-left to bottom-left
+  notchShape.moveTo(0, 0);
+  notchShape.lineTo(nw, 0);
+  notchShape.lineTo(nw, nh);
+  notchShape.lineTo(0, nh);
+  notchShape.lineTo(0, 0);
 
-  const notchMesh = new THREE.Mesh(
-    new THREE.ExtrudeGeometry(notchShape, extrudeSettings),
-    new THREE.MeshNormalMaterial()
-  );
-  notchMesh.position.set(-printConfig.epsilon, flapConfig.pinWidth, 0);
-  // Ensure transforms are applied
-  shapeMesh.updateMatrixWorld();
-  notchMesh.updateMatrixWorld();
+  shape.holes.push(notchShape);
+  const shapeGeometry = new THREE.ShapeGeometry(shape);
+  const material = new THREE.MeshBasicMaterial({
+    color: 0x00ff00,
+    side: THREE.DoubleSide,
+  });
+  const mesh = new THREE.Mesh(shapeGeometry, material);
 
-  // Perform CSG subtraction
-  const subShape = CSG.subtract(shapeMesh, notchMesh);
-
-  return subShape;
+  return mesh;
 }
 
 // Example usage (if running in a browser scene setup):
