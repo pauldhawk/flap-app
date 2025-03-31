@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { getConfig } from "./config.ts";
-const { characters, flapConfig, fontConfig, spoolConfig } = getConfig();
-console.log(characters);
+import { FlapConfig } from "./schema.ts";
+const { flapConfig, spoolConfig } = getConfig();
+
 console.log(flapConfig);
-console.log(fontConfig);
 console.log(spoolConfig);
 
 const scene = new THREE.Scene();
@@ -22,39 +22,21 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-export function createRoundedSquareShape(
-  width: number,
-  height: number,
-  radius: number
-): any {
+export function createRoundedSquareShape(flapConfig: FlapConfig): any {
   const shape = new THREE.Shape();
 
-  const w = width;
-  const h = height;
-  const r = radius;
+  const w = flapConfig.width;
+  const h = flapConfig.height;
+  const r = flapConfig.cornerRadius;
 
   shape.moveTo(0, 0); // bottom-left
   shape.lineTo(w, 0); // left side
   // notch out top left corner for radius
   shape.lineTo(w, h - r);
-  shape.absarc(
-    flapConfig.width - flapConfig.cornerRadius,
-    flapConfig.height - flapConfig.cornerRadius,
-    flapConfig.cornerRadius,
-    0,
-    Math.PI / 2,
-    false
-  );
+  shape.absarc(w - r, h - r, r, 0, Math.PI / 2, false);
 
   shape.lineTo(r, h); //  **
-  shape.absarc(
-    flapConfig.cornerRadius,
-    flapConfig.height - flapConfig.cornerRadius,
-    flapConfig.cornerRadius,
-    Math.PI / 2,
-    Math.PI,
-    false
-  );
+  shape.absarc(r, h - r, r, Math.PI / 2, Math.PI, false);
 
   // Close the shape
   shape.lineTo(0, 0);
@@ -66,11 +48,7 @@ export function createRoundedSquareShape(
 }
 
 // Example usage (if running in a browser scene setup):
-const shape = createRoundedSquareShape(
-  flapConfig.width,
-  flapConfig.height,
-  flapConfig.cornerRadius
-);
+const shape = createRoundedSquareShape(flapConfig);
 // Create the first circle
 const circleGeometry1 = new THREE.CircleGeometry(flapConfig.cornerRadius, 64);
 const circleMaterial1 = new THREE.MeshBasicMaterial({ color: 0x00ff00 }); // Green
