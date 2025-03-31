@@ -1,3 +1,5 @@
+import { AppConfig } from "./schema";
+
 const flapSpoolPitchRadius = (
   numberOfFlaps: number,
   holeRadius: number,
@@ -18,7 +20,6 @@ const flapSpoolOuterRadius = (
 const flapDefaults = {
   cornerRadius: 3.1,
   height: 43,
-  heightAuto: false,
   notchHeightAuto: false,
   notchHeightDefault: 15,
   notchDepth: 3.2,
@@ -28,17 +29,17 @@ const flapDefaults = {
   width: 54,
 };
 
-const fontDefaults = {};
+// const fontDefaults = {};
 const spoolDefaults = {
   holeSeparation: 1.2,
   outset: 0.8,
 };
 
 export const getConfig = (
-  fontOverrides = {},
+  // fontOverrides = {},
   flapOverrides = {},
   spoolOverrides = {}
-) => {
+): AppConfig => {
   const flapConfig = {
     ...flapDefaults,
     ...flapOverrides,
@@ -50,12 +51,12 @@ export const getConfig = (
   const holeRadius = (flapConfig.pinWidth + 0.8) / 2;
 
   return {
-    characters: [],
+    // characters: [],
     flapConfig: {
       ...flapConfig,
       gap: holeRadius * 2 - flapConfig.pinWidth + spoolConfig.holeSeparation,
     },
-    fontConfig: { ...fontDefaults, ...fontOverrides },
+    // fontConfig: { ...fontDefaults, ...fontOverrides },
     spoolConfig: {
       ...spoolConfig,
       holeRadius,
