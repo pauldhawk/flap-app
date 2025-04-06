@@ -4,10 +4,10 @@ import "./style.css";
 // Create the scene
 const scene: THREE.Scene = new THREE.Scene();
 const { characters, flap_config, font_config, spool_config } = get_config();
-console.log(characters);
-console.log(flap_config);
+
+console.log(JSON.stringify(flap_config));
 console.log(font_config);
-console.log(spool_config);
+console.log(JSON.stringify(spool_config));
 // Create the camera
 const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
   75,
