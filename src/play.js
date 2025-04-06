@@ -11,6 +11,31 @@ const {
 } = require("@jscad/modeling").primitives;
 const { translate } = require("@jscad/modeling").transforms;
 
+const { translate } = require("@jscad/modeling").transforms;
+const { intersect, subtract, union } = require("@jscad/modeling").booleans;
+const { hull } = require("@jscad/modeling").hulls;
+const flapConfig = {
+  corner_radius: 3.1,
+  height: 43,
+  height_auto: false,
+  notch_height_auto: false,
+  notch_height_default: 15,
+  notch_depth: 3.2,
+  number_of_flaps: 52,
+  pin_width: 1.4,
+  thickness: 0.7619999999999999,
+  width: 54,
+  gap: 2,
+};
+
+const spoolConfig = {
+  hole_separation: 1.2,
+  outset: 0.8,
+  hole_radius: 1.1,
+  outer_radius: 30.0385939386471,
+  pitch_radius: 28.138593938647098,
+};
+
 const main = () => {
   const allPrimitives = [
     arc({
