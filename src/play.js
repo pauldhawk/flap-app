@@ -12,12 +12,12 @@ const {
 const { translate } = require("@jscad/modeling").transforms;
 const { intersect, subtract, union } = require("@jscad/modeling").booleans;
 const { hull } = require("@jscad/modeling").hulls;
-const flapConfig = {
+const flap = {
   corner_radius: 3.1,
   height: 43,
   height_auto: false,
   notch_height_auto: false,
-  notch_height_default: 15,
+  notch_height: 15,
   notch_depth: 3.2,
   number_of_flaps: 52,
   pin_width: 1.4,
@@ -26,66 +26,54 @@ const flapConfig = {
   gap: 2,
 };
 
-const spoolConfig = {
+const spool = {
   hole_separation: 1.2,
   outset: 0.8,
   hole_radius: 1.1,
   outer_radius: 30.0385939386471,
   pitch_radius: 28.138593938647098,
 };
-/*
-module flap_2d(cut_tabs = true) {
-    translate([0, -flap_pin_width/2, 0])
-    difference() {
-        union() {
-            square([flap_width, flap_height - flap_corner_radius]);
-
-            // rounded corners
-            hull() {
-                translate([flap_corner_radius, flap_height - flap_corner_radius])
-                    circle(r=flap_corner_radius, $fn=40);
-                translate([flap_width - flap_corner_radius, flap_height - flap_corner_radius])
-                    circle(r=flap_corner_radius, $fn=40);
-            }
-        }
-        // spool tabs
-        if(cut_tabs) {
-            translate([-eps, flap_pin_width])
-                square([eps + flap_notch_depth, flap_notch_height]);
-            translate([flap_width - flap_notch_depth, flap_pin_width])
-                square([eps + flap_notch_depth, flap_notch_height]);
-        }
-    }
-}
-    const topHull = hull(leftCircle, rightCircle);
-*/
-const flap_2d = () => {
-  const leftCircle = translate(
-    [flapConfig.width, 0, 0],
-    circle({
-      radius: flapConfig.corner_radius,
-    })
-  );
-  const rightCircle = translate(
-    [0, flapConfig.height, 0],
-    circle({
-      radius: flapConfig.corner_radius,
-    })
-  );
-
-  const flap_main = rectangle({
-    size: [flapConfig.width, flapConfig.height - flapConfig.corner_radius],
-  });
-  const top_bot = union(flap_main, topHull);
-  return [flap_main, leftCircle, rightCircle];
-};
 
 const main = () => {
-  const allPrimitives = flap_2d();
+  const allPrimitives = [
+    line([
+      [0, 0],
+      [flap.width, 0],
+    ]),
+    line([
+      [0, 0],
+      [0, flap.pin_width],
+    ]),
+    line([
+      [0, flap.pin_width],
+      [flap.notch_depth, flap.pin_width],
+    ]),
+    line([
+      [flap.notch_depth, flap.pin_width],
+      [flap.notch_depth, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      [flap.notch_depth, flap.pin_width + flap.notch_height],
+      [0, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      [0, flap.pin_width + flap.notch_height],
+      [0, flap.height - flap.corner_radius],
+    ]),
+    arc({
+      center: [flap.corner_radius, flap.height - flap.corner_radius],
+      radius: flap.corner_radius,
+      // startAngle: Math.PI, // Start at 180 degrees
+      // endAngle: Math.PI * 1.5, // End at 270 degrees
+      // segments: 32, // Optional: Number of segments for smoothness
+    }),
+    line([
+      [flap.corner_radius, flap.height],
+      [flap.width - flap.corner_radius, flap.height],
+    ]),
+  ];
 
-  return allPrimitives.map((primitive, index) =>
-    translate([-10, 0, 0], primitive)
-  );
+  return allPrimitives;
 };
 
 module.exports = { main };

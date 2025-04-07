@@ -1,43 +1,33 @@
 import * as THREE from "three";
-import { get_config } from "./constants.ts";
-import "./style.css";
-// Create the scene
-const scene: THREE.Scene = new THREE.Scene();
-const { characters, flap_config, font_config, spool_config } = get_config();
+import { getConfig } from "./config.ts";
+import { drawFlap } from "./shapes/flap.ts";
 
-console.log(JSON.stringify(flap_config));
-console.log(font_config);
-console.log(JSON.stringify(spool_config));
-// Create the camera
-const camera: THREE.PerspectiveCamera = new THREE.PerspectiveCamera(
+// Get the global configs
+const { flapConfig, printConfig } = getConfig();
+
+const scene = new THREE.Scene();
+
+// Set up the camera
+const camera = new THREE.PerspectiveCamera(
   75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
 );
+camera.position.z = 200;
 
-// Create the renderer
-const renderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
+// Set up the renderer
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Create a cube mesh
-const geometry: THREE.BoxGeometry = new THREE.BoxGeometry();
-const material: THREE.MeshNormalMaterial = new THREE.MeshNormalMaterial();
-const cube: THREE.Mesh = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
-// Position the camera
-camera.position.z = 5;
-
-// Animate the scene
-const animate = (): void => {
+// Draw the flap shape:
+const shape = drawFlap(flapConfig, printConfig);
+scene.add(shape);
+// Render loop
+function animate() {
   requestAnimationFrame(animate);
-
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-
   renderer.render(scene, camera);
-};
+}
 
 animate();
