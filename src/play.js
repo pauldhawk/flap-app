@@ -10,16 +10,14 @@ const {
   star,
 } = require("@jscad/modeling").primitives;
 const { translate } = require("@jscad/modeling").transforms;
-
-const { translate } = require("@jscad/modeling").transforms;
 const { intersect, subtract, union } = require("@jscad/modeling").booleans;
 const { hull } = require("@jscad/modeling").hulls;
-const flapConfig = {
+const flap = {
   corner_radius: 3.1,
   height: 43,
   height_auto: false,
   notch_height_auto: false,
-  notch_height_default: 15,
+  notch_height: 15,
   notch_depth: 3.2,
   number_of_flaps: 52,
   pin_width: 1.4,
@@ -28,7 +26,7 @@ const flapConfig = {
   gap: 2,
 };
 
-const spoolConfig = {
+const spool = {
   hole_separation: 1.2,
   outset: 0.8,
   hole_radius: 1.1,
@@ -38,51 +36,44 @@ const spoolConfig = {
 
 const main = () => {
   const allPrimitives = [
+    line([
+      [0, 0],
+      [flap.width, 0],
+    ]),
+    line([
+      [0, 0],
+      [0, flap.pin_width],
+    ]),
+    line([
+      [0, flap.pin_width],
+      [flap.notch_depth, flap.pin_width],
+    ]),
+    line([
+      [flap.notch_depth, flap.pin_width],
+      [flap.notch_depth, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      [flap.notch_depth, flap.pin_width + flap.notch_height],
+      [0, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      [0, flap.pin_width + flap.notch_height],
+      [0, flap.height - flap.corner_radius],
+    ]),
     arc({
-      center: [-1, -1],
-      radius: 2,
-      startAngle: 0,
-      endAngle: Math.PI / 2,
-      makeTangent: false,
-      segments: 32,
+      center: [flap.corner_radius, flap.height - flap.corner_radius],
+      radius: flap.corner_radius,
+      // startAngle: Math.PI, // Start at 180 degrees
+      // endAngle: Math.PI * 1.5, // End at 270 degrees
+      // segments: 32, // Optional: Number of segments for smoothness
     }),
     line([
-      [1, 1],
-      [-1, -1],
-      [1, -1],
+      [flap.corner_radius, flap.height],
+      [flap.width - flap.corner_radius, flap.height],
     ]),
-    circle({ radius: 1.8, segments: 10 }),
-    ellipse({ radius: [0.7, 2] }),
-    polygon({
-      points: [
-        [-3, -1],
-        [3, -1],
-        [3.5, 2],
-        [1.5, 1],
-        [0, 2],
-        [-1.5, 1],
-        [-3.5, 2],
-      ],
-    }),
-    rectangle({ size: [2, 3] }),
-    roundedRectangle({ size: [4, 3], roundRadius: 0.7 }),
-    square({ size: 3.5 }),
-    star(),
-    star({
-      vertices: 9,
-      outerRadius: 2,
-      innerRadius: 0.8,
-      density: 2,
-      startAngle: Math.PI / 18,
-    }),
   ];
 
-  return allPrimitives.map((primitive, index) =>
-    translate(
-      [((index % 4) - 2) * 6, Math.floor(index / 4 - 2) * 6, 0],
-      primitive
-    )
-  );
+  return allPrimitives;
 };
 
 module.exports = { main };
