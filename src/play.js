@@ -8,8 +8,10 @@ const {
   roundedRectangle,
   square,
   star,
+  text,
 } = require("@jscad/modeling").primitives;
-const { translate } = require("@jscad/modeling").transforms;
+const { translate, extrudeLinear, rotateX } =
+  require("@jscad/modeling").transforms;
 const { intersect, subtract, union } = require("@jscad/modeling").booleans;
 const { hull } = require("@jscad/modeling").hulls;
 const flap = {
@@ -34,8 +36,21 @@ const spool = {
   pitch_radius: 28.138593938647098,
 };
 
-const main = () => {
-  const allPrimitives = [
+const generateSymbol = () => {
+  const text2D = text({
+    string: "H",
+    size: 40,
+    font: "sans-serif", // optional
+    halign: "center",
+    valign: "center",
+  });
+
+  const text3D = extrudeLinear({ height: 2 }, text2D);
+  return rotateX(Math.PI, translate([0, 0, -1], text3D));
+};
+
+const generateFlap = () => {
+  return union([
     line([
       // bottom line
       [0, 0],
@@ -115,20 +130,11 @@ const main = () => {
       [flap.width, 0],
       [flap.width, flap.pin_width],
     ]),
-  ];
+  ]);
+};
 
-  return allPrimitives;
+const main = () => {
+  return [generateFlap(), generateSymbol()];
 };
 
 module.exports = { main };
-
-// line([
-//   // pin up
-//   [0, 0],
-//   [0, flap.pin_width],
-// ]),
-// line([
-//   // pin over
-//   [0, flap.pin_width],
-//   [flap.notch_depth, flap.pin_width],
-// ]),
