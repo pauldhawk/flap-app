@@ -37,30 +37,37 @@ const spool = {
 const main = () => {
   const allPrimitives = [
     line([
+      // bottom line
       [0, 0],
       [flap.width, 0],
     ]),
     line([
+      // pin up
       [0, 0],
       [0, flap.pin_width],
     ]),
     line([
+      // pin over
       [0, flap.pin_width],
       [flap.notch_depth, flap.pin_width],
     ]),
     line([
+      // notch up
       [flap.notch_depth, flap.pin_width],
       [flap.notch_depth, flap.pin_width + flap.notch_height],
     ]),
     line([
+      // notch back
       [flap.notch_depth, flap.pin_width + flap.notch_height],
       [0, flap.pin_width + flap.notch_height],
     ]),
     line([
+      // side up
       [0, flap.pin_width + flap.notch_height],
       [0, flap.height - flap.corner_radius],
     ]),
     arc({
+      // top left corner
       center: [flap.corner_radius, flap.height - flap.corner_radius],
       radius: flap.corner_radius,
       // startAngle: Math.PI, // Start at 180 degrees
@@ -68,8 +75,45 @@ const main = () => {
       // segments: 32, // Optional: Number of segments for smoothness
     }),
     line([
+      // top
       [flap.corner_radius, flap.height],
       [flap.width - flap.corner_radius, flap.height],
+    ]),
+    arc({
+      // top right corner
+      center: [
+        flap.width - flap.corner_radius,
+        flap.height - flap.corner_radius,
+      ],
+      radius: flap.corner_radius,
+      // startAngle: Math.PI, // Start at 180 degrees
+      // endAngle: Math.PI * 1.5, // End at 270 degrees
+      // segments: 32, // Optional: Number of segments for smoothness
+    }),
+    line([
+      // side up
+      [flap.width, flap.pin_width + flap.notch_height],
+      [flap.width, flap.height - flap.corner_radius],
+    ]),
+    line([
+      // notch back
+      [flap.width - flap.notch_depth, flap.pin_width + flap.notch_height],
+      [flap.width, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      // notch up
+      [flap.width - flap.notch_depth, flap.pin_width],
+      [flap.width - flap.notch_depth, flap.pin_width + flap.notch_height],
+    ]),
+    line([
+      // pin over
+      [flap.width, flap.pin_width],
+      [flap.width - flap.notch_depth, flap.pin_width],
+    ]),
+    line([
+      // pin up
+      [flap.width, 0],
+      [flap.width, flap.pin_width],
     ]),
   ];
 
@@ -77,3 +121,14 @@ const main = () => {
 };
 
 module.exports = { main };
+
+// line([
+//   // pin up
+//   [0, 0],
+//   [0, flap.pin_width],
+// ]),
+// line([
+//   // pin over
+//   [0, flap.pin_width],
+//   [flap.notch_depth, flap.pin_width],
+// ]),
