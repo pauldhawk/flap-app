@@ -1,4 +1,11 @@
+import { booleans, colors, primitives } from "@jscad/modeling";
 import { FlapConfig, PrintConfig } from "../schema";
+// @ts-ignore
+const { cube, cuboid, line, sphere, star } = primitives;
+// @ts-ignore
+const { intersect, subtract } = booleans;
+// @ts-ignore
+const { colorize } = colors;
 
 export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
   const { epsilon } = printConfig;
@@ -13,4 +20,6 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
     width,
     epsilon
   );
+  const rect = primitives.rectangle({ size: [30, 20] });
+  return [rect];
 }
