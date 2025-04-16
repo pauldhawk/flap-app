@@ -78,7 +78,7 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
   });
   const finalFlap = colorize(
     [1, 0, 0],
-    translate([0, 0, 10], extrudeLinear({ height: thickness }, flapNoCuts))
+    extrudeLinear({ height: thickness }, flapNoCuts)
   );
   return [finalFlap, leftNotch, rightNotch];
 }
