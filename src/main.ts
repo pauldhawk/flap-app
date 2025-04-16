@@ -4,15 +4,16 @@ import {
   entitiesFromSolids,
   prepareRender,
 } from "@jscad/regl-renderer";
-import { exampleShapes } from "./shapes/example_shapes";
+import { getConfig } from "./config";
+import { drawFlap } from "./shapes/flap";
 
 const width = window.innerWidth;
 const height = window.innerHeight;
-
-const shapes = exampleShapes();
-// const flap = drawFlap();
+const { flapConfig, printConfig } = getConfig();
+// const shapes = exampleShapes();
+const flap = drawFlap(flapConfig, printConfig);
 // @ts-ignore
-const entities = entitiesFromSolids({}, ...shapes);
+const entities = entitiesFromSolids({}, ...flap);
 
 // prepare the camera
 const perspectiveCamera = cameras.perspective;
