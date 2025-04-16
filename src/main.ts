@@ -19,7 +19,7 @@ const entities = entitiesFromSolids({}, ...flap);
 const perspectiveCamera = cameras.perspective;
 const camera = Object.assign({}, perspectiveCamera.defaults);
 camera.up = [0, 1, 0];
-camera.position = [0, 0, 500];
+// camera.position = [0, 0, 500];
 camera.target = [0, 0, 0];
 perspectiveCamera.setProjection(camera, camera, { width, height });
 perspectiveCamera.update(camera, camera);

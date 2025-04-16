@@ -57,28 +57,19 @@ export function drawFlap(flapConfig: FlapConfig, printConfig: PrintConfig) {
     })
   );
   const flapNoCuts = union(rect, flapTop);
-  // const flapWithNotch = subtract(
-  //   flapNoCuts,
-  //   primitives.rectangle({
-  //     size: [notchDepth, notchHeight],
-  //     center: [0, notchHeight / 2 + pinWidth],
-  //   }),
-  //   primitives.rectangle({
-  //     size: [notchDepth, notchHeight],
-  //     center: [width - notchDepth / 2, notchHeight / 2 + pinWidth],
-  //   })
-  // );
+
   const leftNotch = primitives.rectangle({
     size: [notchDepth, notchHeight],
-    center: [0, notchHeight / 2 + pinWidth],
+    center: [notchDepth / 2, notchHeight / 2 + pinWidth],
   });
   const rightNotch = primitives.rectangle({
     size: [notchDepth, notchHeight],
     center: [width - notchDepth / 2, notchHeight / 2 + pinWidth],
   });
+  const flapWithNotch = subtract(flapNoCuts, rightNotch, leftNotch);
   const finalFlap = colorize(
-    [1, 0, 0],
-    extrudeLinear({ height: thickness }, flapNoCuts)
+    [0, 0, 0],
+    extrudeLinear({ height: thickness }, flapWithNotch)
   );
-  return [finalFlap, leftNotch, rightNotch];
+  return [finalFlap];
 }
